@@ -3,15 +3,15 @@ import { Card, Icon, Image } from 'semantic-ui-react'
 import PropTypes from 'prop-types';
 
 
-const ReposResults = ({getRepo}) => (
+const ReposResults = ({ReposItems}) => (
 <Card.Group itemsPerRow={3}>
 
 {
   //On récupère la liste filtrée et on map dessus pour afficher les résultats 
   //Les CARDS viennent de Semantic UI et permettent une mise en page rapide 
-  getRepo.map(
-            (data) => <Card key={data.id} {...data}>
-            <Image src={data.owner.avatar_url}  />
+  ReposItems().map(
+            (data) => <Card key={data.id}>
+            <Image src={data.owner.avatar_url}/> {/*Ne pas utiliser ...data ici car cela créé un conflit avec les enfants apelés data.quelquechose*/}
             <Card.Content>
               <Card.Header>{data.name}</Card.Header>
               <Card.Meta>{data.owner.login}</Card.Meta>
@@ -27,13 +27,7 @@ const ReposResults = ({getRepo}) => (
 
 //On valide nos props
 ReposResults.propTypes = {
-  getRepo: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-    }),
-  ).isRequired,
+  ReposItems: PropTypes.func.isRequired,
 };
 
 export default ReposResults

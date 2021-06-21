@@ -3,28 +3,34 @@ import { Input } from 'semantic-ui-react'
 import PropTypes from 'prop-types';
 
 
-const SearchBar = ({searchRepo, search}) => {
-  
-  const handleChange = (event) => {
-    //console.log('ça change, nouvelle valeur :', event.target.value);
-    // on demande à ce que la nouvelle valeur de la recherche soit
-    // ce qui a été saisi dans le champ
-    //On réagit à la modification du champ de formulaire
-    // en appellant la méthode qui permet de modifier la propriété du state
-    searchRepo(event.target.value);
+const SearchBar = ({searchRepo, searchInput, setSearchInput, fetchRepos}) => {
+   // 2- le searchInput est modifié on le reprend dans notre fonction qui gère le submit
+   const handleSubmit = (event) => {
+    
+    event.preventDefault();
+    // 3- on lui passe searchInput qui découle de la value de notre target et au submit il vient modifier directement le searchRepo (fonction dans APP/index.js)
+    //( SearchRepo est utilisé pour modifier le state Search à son tour utilisé pour trouver les repos correspondants via getRepo)
+    searchRepo(searchInput);
+    fetchRepos();
   }
 
-  return (  
-    <Input 
-    value={search}
-    onChange={handleChange}
-    fluid icon='search' placeholder='Search...' />
+  return (
+    <form onSubmit={handleSubmit}>
+        <Input
+          type="text"
+          value={searchInput}
+          onChange={(event) => setSearchInput(event.target.value)} // 1- Lorsque l'on change on modifie le searchInput
+          fluid icon='search' placeholder='Search...' />
+    </form>
   )
-}
+};
 
-MessageAlert.propTypes = {
+
+SearchBar.propTypes = {
   searchRepo: PropTypes.func.isRequired,
-  search: PropTypes.string.isRequired,
+  searchInput: PropTypes.string.isRequired,
+  setSearchInput: PropTypes.func.isRequired,
+  fetchRepos: PropTypes.func.isRequired,
 };
 
 export default SearchBar;
